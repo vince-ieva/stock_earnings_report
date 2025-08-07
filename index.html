@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Earnings Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-chart-line"></i> Stock Earnings Tracker</h1>
+            <p class="subtitle">Real-time earnings data and forecasts for any stock</p>
+            
+            <div class="ticker-input-section">
+                <div class="input-group">
+                    <input type="text" id="ticker-input" placeholder="Add another stock (e.g., AAPL, TSLA, NVDA)" maxlength="10">
+                    <button id="search-btn"><i class="fas fa-plus"></i> Add Stock</button>
+                </div>
+                <div class="popular-tickers">
+                    <span class="popular-label">Popular:</span>
+                    <button class="ticker-btn" data-ticker="AMD">AMD</button>
+                    <button class="ticker-btn" data-ticker="GOOG">GOOG</button>
+                    <button class="ticker-btn" data-ticker="AMZN">AMZN</button>
+                    <button class="ticker-btn" data-ticker="IBM">IBM</button>
+                    <button class="ticker-btn" data-ticker="DELL">DELL</button>
+                    <button class="ticker-btn" data-ticker="PANW">PANW</button>
+                </div>
+                <div class="all-tickers" style="display: none;">
+                    <button class="ticker-btn" data-ticker="PNNT">PNNT</button>
+                    <button class="ticker-btn" data-ticker="SCM">SCM</button>
+                    <button class="ticker-btn" data-ticker="SERV">SERV</button>
+                    <button class="ticker-btn" data-ticker="SMCI">SMCI</button>
+                    <button class="ticker-btn" data-ticker="SYM">SYM</button>
+                    <button class="ticker-btn" data-ticker="KMI">KMI</button>
+                    <button class="ticker-btn" data-ticker="INOD">INOD</button>
+                    <button class="ticker-btn" data-ticker="HUM">HUM</button>
+                    <button class="ticker-btn" data-ticker="FTNT">FTNT</button>
+                    <button class="ticker-btn" data-ticker="FI">FI</button>
+                </div>
+                <button class="show-more-btn" id="show-more-tickers">Show More Tickers</button>
+            </div>
+        </header>
+
+        <div class="loading-section" id="loading-section" style="display: none;">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <div>Loading all stock data...</div>
+            </div>
+        </div>
+
+        <div class="stocks-grid" id="stocks-grid">
+            <!-- Stock cards will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

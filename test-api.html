@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Earnings Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ed1c24;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #ed1c24;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #d41821;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 FMP API Test - Earnings Calendar Endpoint</h1>
+        
+        <div class="info">
+            <strong>Testing:</strong> /v3/earning_calendar endpoint<br>
+            <strong>Date Range:</strong> July 31, 2025 to September 6, 2025<br>
+            <strong>Looking for:</strong> AMD earnings data
+        </div>
+        
+        <button onclick="runAPITest()">🚀 Run API Test</button>
+        
+        <div id="status"></div>
+        <div id="log"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_KEY = 'zI77fzFLGnmDeta7cfzs9Zxflx2riZwi';
+        const BASE_URL = 'https://financialmodelingprep.com/api/v3';
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function setStatus(message, type = 'info') {
+            document.getElementById('status').innerHTML = `<div class="${type}">${message}</div>`;
+        }
+        
+        async function runAPITest() {
+            document.getElementById('log').textContent = '';
+            document.getElementById('result').innerHTML = '';
+            
+            setStatus('🔄 Testing API connection...', 'info');
+            log('Starting API test...');
+            
+            try {
+                // Set date range from August 7th, 2025
+                const today = new Date('2025-08-07');
+                const fromDate = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+                const toDate = new Date(today.getTime() + (30 * 24 * 60 * 60 * 1000));
+                
+                const from = fromDate.toISOString().split('T')[0];
+                const to = toDate.toISOString().split('T')[0];
+                
+                const url = `${BASE_URL}/earning_calendar?from=${from}&to=${to}&apikey=${API_KEY}`;
+                
+                log(`API URL: ${url}`);
+                log(`Date range: ${from} to ${to}`);
+                
+                setStatus('📡 Making API request...', 'info');
+                
+                const response = await fetch(url);
+                
+                log(`Response status: ${response.status}`);
+                log(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers), null, 2)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                setStatus('📥 Processing response data...', 'info');
+                
+                const data = await response.json();
+                
+                log(`Total records received: ${data.length}`);
+                
+                if (data.length > 0) {
+                    log(`Sample record: ${JSON.stringify(data[0], null, 2)}`);
+                    
+                    // Filter for AMD specifically
+                    const amdEarnings = data.filter(item => item.symbol === 'AMD');
+                    log(`AMD earnings found: ${amdEarnings.length}`);
+                    
+                    if (amdEarnings.length > 0) {
+                        log(`AMD earnings data: ${JSON.stringify(amdEarnings, null, 2)}`);
+                        setStatus(`✅ Success! Found ${amdEarnings.length} AMD earnings records out of ${data.length} total records`, 'success');
+                        
+                        // Display results
+                        document.getElementById('result').innerHTML = `
+                            <h3>📊 Test Results</h3>
+                            <p><strong>Total Records:</strong> ${data.length}</p>
+                            <p><strong>AMD Records:</strong> ${amdEarnings.length}</p>
+                            <h4>AMD Earnings:</h4>
+                            <pre>${JSON.stringify(amdEarnings, null, 2)}</pre>
+                        `;
+                    } else {
+                        setStatus(`⚠️ No AMD earnings found in the date range (${data.length} total records)`, 'error');
+                        
+                        // Show some sample companies found
+                        const sampleCompanies = [...new Set(data.slice(0, 10).map(item => item.symbol))];
+                        log(`Sample companies found: ${sampleCompanies.join(', ')}`);
+                        
+                        document.getElementById('result').innerHTML = `
+                            <h3>📊 Test Results</h3>
+                            <p><strong>Total Records:</strong> ${data.length}</p>
+                            <p><strong>AMD Records:</strong> 0</p>
+                            <p><strong>Sample Companies Found:</strong> ${sampleCompanies.join(', ')}</p>
+                        `;
+                    }
+                } else {
+                    setStatus('⚠️ No earnings data found for the specified date range', 'error');
+                    log('Empty response - no earnings data');
+                }
+                
+            } catch (error) {
+                log(`Error: ${error.message}`);
+                setStatus(`❌ API Error: ${error.message}`, 'error');
+                
+                document.getElementById('result').innerHTML = `
+                    <h3>❌ Error Details</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p><strong>Type:</strong> ${error.name}</p>
+                `;
+            }
+        }
+        
+        // Auto-run test on page load
+        window.onload = () => {
+            setTimeout(runAPITest, 1000);
+        };
+    </script>
+</body>
+</html>
