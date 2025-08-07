@@ -1,5 +1,22 @@
 // Test API call to earnings calendar endpoint
-const API_KEY = 'zI77fzFLGnmDeta7cfzs9Zxflx2riZwi';
+// Function to get API key from environment or configuration
+function getApiKey() {
+    // Try to get from window (browser environment)
+    if (typeof window !== 'undefined' && window.FMP_API_KEY) {
+        return window.FMP_API_KEY;
+    }
+    
+    // Try to get from Node.js environment
+    if (typeof process !== 'undefined' && process.env && process.env.FMP_API_KEY) {
+        return process.env.FMP_API_KEY;
+    }
+    
+    // Fallback: prompt user to configure API key
+    console.error('API key not configured. Please set up your API key in api-key.js or environment variables.');
+    return null;
+}
+
+const API_KEY = getApiKey();
 const BASE_URL = 'https://financialmodelingprep.com/api/v3';
 
 async function testEarningsCalendarAPI() {

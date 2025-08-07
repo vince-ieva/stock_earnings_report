@@ -21,16 +21,26 @@ A modern web application that displays real-time stock earnings data with a beau
 3. Navigate to your dashboard to get your API key
 4. Free tier includes 250 API calls per day
 
-### 2. Configure the API Key
+### 2. Configure the API Key (Secure Method)
 
-1. Open `config.js` in the project folder
-2. Replace `'YOUR_FMP_API_KEY'` with your actual API key:
+1. Copy the API key template file:
+   ```bash
+   cp api-key.template.js api-key.js
+   ```
 
-```javascript
-const API_CONFIG = {
-    FMP_API_KEY: 'your_actual_api_key_here', // Replace this
-    // ... other settings
-};
+2. Open `api-key.js` in your editor
+
+3. Replace `'YOUR_FMP_API_KEY_HERE'` with your actual API key:
+   ```javascript
+   window.FMP_API_KEY = 'your_actual_api_key_here';
+   ```
+
+4. Save the file. The `api-key.js` file is automatically ignored by git and won't be committed to version control.
+
+**Alternative: Environment Variables**
+If you're running this in a Node.js environment, you can also set the `FMP_API_KEY` environment variable:
+```bash
+export FMP_API_KEY='your_actual_api_key_here'
 ```
 
 ### 3. Run the Application
@@ -104,11 +114,16 @@ For higher usage, consider upgrading to a paid plan.
 
 ```
 stock-website/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styling
-├── script.js           # Main JavaScript application
-├── config.js           # API configuration
-└── README.md          # This file
+├── index.html              # Main HTML file
+├── styles.css              # CSS styling
+├── script.js               # Main JavaScript application
+├── config.js               # API configuration (secure)
+├── api-key.template.js     # API key template file
+├── api-key.js             # Your API key (create from template, git ignored)
+├── test-api.html          # API testing page
+├── test-api.js            # API testing scripts
+├── .gitignore             # Git ignore patterns
+└── README.md              # This file
 ```
 
 ## License
