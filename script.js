@@ -128,6 +128,9 @@ function createStockCard(symbol, quoteData, profileData, lastEarnings) {
                         $${Math.abs(parseFloat(priceChange)).toFixed(2)} (${Math.abs(parseFloat(priceChangePercent)).toFixed(2)}%)
                     </div>
                 </div>
+                <button class="remove-stock-btn" onclick="removeStock('${symbol}')" title="Remove ${symbol}">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
     `;
 
@@ -375,6 +378,44 @@ async function addSingleStock(symbol) {
     const cardHtml = await loadStockData(symbol);
     loadingCard.outerHTML = cardHtml;
     loadedStocks.add(symbol);
+}
+
+function removeStock(symbol) {
+    // Show confirmation dialog
+    const confirmRemoval = confirm(`Are you sure you want to remove ${symbol} from your watchlist?`);
+    
+    if (confirmRemoval) {
+        // Remove from loaded stocks set
+        loadedStocks.delete(symbol);
+        
+        // Get the card element
+        const stockCard = document.getElementById(`card-${symbol}`);
+        
+        if (stockCard) {
+            // Add removal animation
+            stockCard.style.transform = 'scale(0.95)';
+            stockCard.style.opacity = '0.7';
+            stockCard.style.transition = 'all 0.3s ease-out';
+            
+            // Remove the card after animation
+            setTimeout(() => {
+                stockCard.remove();
+                
+                // If no stocks left, show a helpful message
+                if (loadedStocks.size === 0) {
+                    stocksGrid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                            <h3 style="margin-bottom: 10px;">No stocks in your watchlist</h3>
+                            <p>Add some stocks using the search bar above or click on the popular tickers.</p>
+                        </div>
+                    `;
+                }
+            }, 300);
+            
+            console.log(`Removed ${symbol} from watchlist`);
+        }
+    }
 }
 
 // Event Listeners
