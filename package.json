@@ -1,0 +1,27 @@
+{
+  "name": "stock-earnings-tracker",
+  "version": "1.0.0",
+  "description": "A modern web application that displays real-time stock earnings data",
+  "main": "index.html",
+  "scripts": {
+    "build": "node build-config.js",
+    "dev": "python -m http.server 8000",
+    "dev-node": "npx http-server -p 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/stock-website.git"
+  },
+  "keywords": [
+    "stocks",
+    "earnings",
+    "finance",
+    "api",
+    "web-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

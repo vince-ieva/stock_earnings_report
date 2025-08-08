@@ -114,17 +114,44 @@ For higher usage, consider upgrading to a paid plan.
 
 ```
 stock-website/
+├── .github/workflows/
+│   └── deploy.yml         # GitHub Actions deployment workflow
 ├── index.html              # Main HTML file
 ├── styles.css              # CSS styling
 ├── script.js               # Main JavaScript application
 ├── config.js               # API configuration (secure)
 ├── api-key.template.js     # API key template file
 ├── api-key.js             # Your API key (create from template, git ignored)
+├── build-config.js         # Build script for environment variables
+├── package.json            # Package configuration
 ├── test-api.html          # API testing page
 ├── test-api.js            # API testing scripts
 ├── .gitignore             # Git ignore patterns
+├── GITHUB_DEPLOYMENT.md   # GitHub Pages deployment guide
 └── README.md              # This file
 ```
+
+## Deployment
+
+### GitHub Pages (Recommended)
+
+This project is configured for easy deployment to GitHub Pages with environment variables:
+
+1. **Set up GitHub Secret:**
+   - Go to repository Settings → Secrets and variables → Actions
+   - Create new secret: `FMP_API_KEY` = your actual API key
+
+2. **Enable GitHub Pages:**
+   - Repository Settings → Pages → Source: "GitHub Actions"
+
+3. **Deploy:**
+   - Push to main branch - GitHub Actions will automatically build and deploy
+
+See `GITHUB_DEPLOYMENT.md` for detailed instructions.
+
+### Local Development
+
+For local development, continue using your `api-key.js` file as before.
 
 ## License
 

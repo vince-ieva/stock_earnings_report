@@ -1,0 +1,65 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js (for build process)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Create api-key.js from environment variable
+      env:
+        FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+      run: |
+        if [ -n "$FMP_API_KEY" ]; then
+          echo "// API Key Configuration" > api-key.js
+          echo "// This file is generated from GitHub Secrets during deployment" >> api-key.js
+          echo "" >> api-key.js
+          echo "window.FMP_API_KEY = '$FMP_API_KEY';" >> api-key.js
+          echo "✅ API key configured from GitHub Secrets"
+        else
+          echo "⚠️  Warning: FMP_API_KEY secret not found. Site will use fallback behavior."
+          echo "// API Key Configuration" > api-key.js
+          echo "// No API key configured - using demo mode" >> api-key.js
+          echo "" >> api-key.js
+          echo "window.FMP_API_KEY = null;" >> api-key.js
+        fi
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        # Upload entire repository
+        path: '.'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
