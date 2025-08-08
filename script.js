@@ -268,19 +268,15 @@ async function loadStockData(symbol) {
     console.log(`Loading ${symbol} data...`);
     
     try {
-        // Fetch all stock data in parallel
-        const [quoteData, profileData, lastEarnings] = await Promise.all([
-            fetchStockQuote(symbol),
-            fetchStockProfile(symbol),
-            fetchStockEarningsHistory(symbol)
-        ]);
+        // Use cached data fetching (24-hour cache)
+        const stockData = await fetchStockDataCached(symbol);
         
-        if (!quoteData) {
+        if (!stockData || !stockData.quote) {
             return showStockError(symbol, 'Failed to fetch stock data');
         }
         
         console.log(`${symbol} loaded successfully`);
-        return createStockCard(symbol, quoteData, profileData, lastEarnings);
+        return createStockCard(symbol, stockData.quote, stockData.profile, stockData.earnings);
         
     } catch (error) {
         console.error(`Error loading ${symbol} data:`, error);
@@ -388,6 +384,11 @@ function removeStock(symbol) {
         // Remove from loaded stocks set
         loadedStocks.delete(symbol);
         
+        // Clear cache for this symbol
+        if (typeof stockCache !== 'undefined') {
+            stockCache.clearCache(symbol);
+        }
+        
         // Get the card element
         const stockCard = document.getElementById(`card-${symbol}`);
         
@@ -413,7 +414,7 @@ function removeStock(symbol) {
                 }
             }, 300);
             
-            console.log(`Removed ${symbol} from watchlist`);
+            console.log(`Removed ${symbol} from watchlist and cleared cache`);
         }
     }
 }
@@ -459,5 +460,14 @@ tickerInput.addEventListener('input', (e) => {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Stock Earnings Tracker initialized with 24-hour caching');
+    
+    // Show cache status after a brief delay
+    setTimeout(() => {
+        if (typeof stockCache !== 'undefined') {
+            stockCache.showCacheStatus();
+        }
+    }, 1000);
+    
     loadAllPredefinedStocks();
 });

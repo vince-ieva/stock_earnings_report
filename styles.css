@@ -693,3 +693,53 @@ body {
         font-size: 1.3rem;
     }
 }
+
+/* Cache Status Styles */
+.cache-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.cache-indicator.show {
+    opacity: 1;
+}
+
+.cache-indicator.cached {
+    background: rgba(16, 185, 129, 0.9);
+}
+
+.cache-indicator.fresh {
+    background: rgba(59, 130, 246, 0.9);
+}
+
+/* Performance indicator styling */
+.performance-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.performance-indicator.positive {
+    color: #10b981;
+}
+
+.performance-indicator.negative {
+    color: #ef4444;
+}
+
+.performance-indicator i {
+    font-size: 0.75rem;
+}
